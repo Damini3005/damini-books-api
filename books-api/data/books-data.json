@@ -1,0 +1,20 @@
+[
+  {
+    "id": "e22137d5-2e0f-48e0-a430-6644d6e98b0f",
+    "title": "The Hitchhiker's Guide to the Galaxy",
+    "year": 1979,
+    "author": {
+      "name": "Douglas Adams",
+      "country": "UK"
+    }
+  },
+  {
+    "id": "a9b8c7d6-1f0e-47b1-b541-7755c6f89a1b",
+    "title": "1984",
+    "year": 1949,
+    "author": {
+      "name": "George Orwell",
+      "country": "UK"
+    }
+  }
+]
