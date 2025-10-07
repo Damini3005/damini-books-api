@@ -1,7 +1,10 @@
 import json
 import logging
+import uuid
+import os
 from typing import List, Dict, Any
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException, status
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
@@ -44,3 +47,32 @@ def _save_data():
 # Load initial data when the application starts
 _load_data()
 logger.info(books_db)
+
+
+
+class Author(BaseModel):
+    name: str = Field(min_length=3, description="The full name of the author")
+    country: str = Field(min_length=2, max_length=50, description="The author's country of origin.")
+
+    # Basemodel
+class BookBase(BaseModel):
+    title:str = Field(min_length=1, description="The title of the book")
+    year:int = Field(gt=1980, lt=2025, description="The publication year of the book.")
+    author: Author  
+
+# Response model
+class Book(BookBase):
+    id: uuid.UUID = Field(description="The unique identifier for the book.")
+
+@app.get("/healthz", status_code=status.HTTP_200_OK)
+def health_check():
+    file_exists = os.path.exists(DATA_FILE)
+
+    status_detail = {
+        "status": "OK",
+        "service": "Book CRUD API",
+        "Data_file_status": "Available" if file_exists else "Missing (Check deployment volume)"
+    }
+
+    logger.info(f"Health check performed. Data file status: {status_detail['Data_file_status']}")
+    return status_detail
