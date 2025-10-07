@@ -76,3 +76,17 @@ def health_check():
 
     logger.info(f"Health check performed. Data file status: {status_detail['Data_file_status']}")
     return status_detail
+
+
+# post method
+@app.post("/book/", response_model=Book, status_code=status.HTTP_201_CREATED)
+def create_book(book_data: BookBase):
+    new_id = uuid.uuid4()
+    new_book = book_data.model_dump()
+    new_book["id"] = str(new_id)
+
+    books_db.append(new_book)
+    _save_data()
+
+    logger.info(f"Book created with ID: {new_book['id']}")
+    return new_book
