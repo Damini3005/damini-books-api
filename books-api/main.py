@@ -1,6 +1,6 @@
 import json
 import logging
-import uuid
+# import uuid
 import os
 from typing import List, Dict, Any
 from fastapi import FastAPI,HTTPException, status
@@ -23,6 +23,9 @@ books_db: List[Dict[str, Any]] = []
 def _load_data():
     """Loads book data from the JSON file into the in-memory database."""
     global books_db
+    with open(DATA_FILE, 'r') as f:
+            books_db = json.load(f)
+            logger.info(f"Successfully loaded {len(books_db)} records from {DATA_FILE}")
     try:
         with open(DATA_FILE, 'r') as f:
             books_db = json.load(f)
@@ -44,7 +47,7 @@ def _save_data():
     except Exception as e:
         logger.error(f"Failed to save data to {DATA_FILE}: {e}")
 
-# Load initial data when the application starts
+# # Load initial data when the application starts
 _load_data()
 logger.info(books_db)
 
