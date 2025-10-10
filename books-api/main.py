@@ -1,6 +1,6 @@
 import json
 import logging
-# import uuid
+import uuid
 import os
 from typing import List, Dict, Any
 from fastapi import FastAPI,HTTPException, status
@@ -15,7 +15,7 @@ DATA_FILE = "data/books-data.json"
 
 # Use a simple in-memory list to store data loaded from the file
 # This will be reloaded on server restart, but works for the CRUD demo.
-books_db: List[Dict[str, Any]] = []
+books_db: List[Dict[str, any]] = []
 
 
 # File Handling Functions (Simulating Database I/O) ---
@@ -23,9 +23,9 @@ books_db: List[Dict[str, Any]] = []
 def _load_data():
     """Loads book data from the JSON file into the in-memory database."""
     global books_db
-    with open(DATA_FILE, 'r') as f:
-            books_db = json.load(f)
-            logger.info(f"Successfully loaded {len(books_db)} records from {DATA_FILE}")
+    # with open(DATA_FILE, 'r') as f:
+    #         books_db = json.load(f)
+    #         logger.info(f"Successfully loaded {len(books_db)} records from {DATA_FILE}")
     try:
         with open(DATA_FILE, 'r') as f:
             books_db = json.load(f)
@@ -49,7 +49,7 @@ def _save_data():
 
 # # Load initial data when the application starts
 _load_data()
-logger.info(books_db)
+# logger.info(books_db)
 
 
 
@@ -82,8 +82,9 @@ def health_check():
 
 
 # post method
-@app.post("/book/", response_model=Book, status_code=status.HTTP_201_CREATED)
+@app.post("/books/", response_model=Book, status_code=status.HTTP_201_CREATED)
 def create_book(book_data: BookBase):
+
     new_id = uuid.uuid4()
     new_book = book_data.model_dump()
     new_book["id"] = str(new_id)
@@ -93,3 +94,40 @@ def create_book(book_data: BookBase):
 
     logger.info(f"Book created with ID: {new_book['id']}")
     return new_book
+
+
+# @app.get("/books/", response_model=List[Book])
+# def read_all_books():
+#     logger.info(f"Reading all {len(books_db)} books.")
+#     return books_db
+@app.get("/books/", response_model=list[Book])
+def read_all_books():
+    """Retrieves a list of all books in the database."""
+    logger.info(f"Reading all {len(books_db)} books.")
+    # FastAPI automatically handles converting the list of dicts to the List[Book] response model
+    return books_db
+
+# # GET: Read one operation 
+@app.get("/books/{book_id}", response_model=Book)
+def read_single_book(book_id: str):
+
+    try:
+        target_uuid = uuid.UUID(book_id)
+    except ValueError:
+        logger.warning(f"Invalid UUID format provided:{book_id}") 
+
+        raise HTTPException(
+            status_code = status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid book ID format: '{book_id}'. Must be a valid  UUID."
+        )   
+    
+    for book in books_db:
+        if book.get("id") == str(target_uuid):
+             logger.info(f"Successfully retrived book with Id: {book_id}")
+             return book
+
+    logger.warning(f"Book not found with ID: {book_id}")    
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Book with ID {book_id} not found."
+    )
