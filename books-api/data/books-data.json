@@ -1,12 +1,12 @@
 [
   {
-    "id": "e22137d5-2e0f-48e0-a430-6644d6e98b0f",
-    "title": "The Hitchhiker's Guide to the Galaxy",
-    "year": 1982,
+    "title": "Cosmic Rail - Updated",
+    "year": 2024,
     "author": {
-      "name": "Douglas Adams",
-      "country": "UK"
-    }
+      "name": "John K.",
+      "country": "USA"
+    },
+    "id": "e22137d5-2e0f-48e0-a430-6644d6e98b0f"
   },
   {
     "id": "a9b8c7d6-1f0e-47b1-b541-7755c6f89a1b",
@@ -16,5 +16,50 @@
       "name": "George Orwell",
       "country": "UK"
     }
+  },
+  {
+    "title": "cosmatic",
+    "year": 1981,
+    "author": {
+      "name": "George Orwell",
+      "country": "UK"
+    },
+    "id": "add53c5f-150c-43cf-8d7e-508fd979f63b"
+  },
+  {
+    "title": "Cosmic Rails",
+    "year": 2024,
+    "author": {
+      "name": "Alex K.",
+      "country": "USA"
+    },
+    "id": "30acdeac-8f7e-4100-9412-90ca648bc5a9"
+  },
+  {
+    "title": "Cosmic Rails",
+    "year": 2024,
+    "author": {
+      "name": "Alex K.",
+      "country": "USA"
+    },
+    "id": "f586d89c-463c-4489-bc25-cdc8c3115a54"
+  },
+  {
+    "title": "cosmatic",
+    "year": 1981,
+    "author": {
+      "name": "George Orwell",
+      "country": "UK"
+    },
+    "id": "747a2f6a-437c-4ce4-9bb9-f0fc0cd7f11a"
+  },
+  {
+    "title": "Cosmic Rails",
+    "year": 2024,
+    "author": {
+      "name": "Alex K.",
+      "country": "USA"
+    },
+    "id": "54dcf46f-9171-4424-a8c1-90e9879e67e9"
   }
 ]

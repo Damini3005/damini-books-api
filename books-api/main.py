@@ -3,7 +3,7 @@ import logging
 import uuid
 import os
 from typing import List, Dict, Any
-from fastapi import FastAPI,HTTPException, status
+from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
 
 app = FastAPI()
@@ -131,3 +131,33 @@ def read_single_book(book_id: str):
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Book with ID {book_id} not found."
     )
+
+
+# Implement UPDATE endpoint
+@app.put("/books/{book_id}", response_model=Book)
+def update_book(book_id:str, book_data: BookBase):
+
+    try:
+        target_uuid = str(uuid.UUID(book_id))
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid book ID format: '{book_id}'. Must be a valid UUID"
+        )    
+
+    found = False
+    for i, book in enumerate(books_db):
+        if book.get("id") == target_uuid:
+            updated_book = book_data.model_dump()
+            updated_book["id"] = target_uuid
+            books_db[i] = updated_book
+            _save_data()
+
+            logger.info(f"Book updated with ID: {book_id}")
+            found = True
+            return updated_book
+        
+        if not found:
+            logger.warning(f"Update failed. Book not found with ID: {book_id}")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with ID {book_id} not found. Cannot update."
+            )
