@@ -161,3 +161,38 @@ def update_book(book_id:str, book_data: BookBase):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with ID {book_id} not found. Cannot update."
             )
+        
+
+# Implement DELETE operation
+@app.delete("/books/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_book(book_id: str):
+
+    """Deletes a book identified by its UUID. returns 204 No Content upon successful deletion""" 
+
+    global books_db
+
+    # try to validate the uuid format
+    try:
+        target_uuid = str(uuid.UUID(book_id))
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid book ID format: '{book_id} Must be a valid UUID."
+        )        
+    # use a list comprehension to filter out the book to be deleted
+    initial_length = len(books_db)
+    books_db = [book for book in books_db if book.get("id")  != target_uuid]
+
+    if len(books_db) <  initial_length:
+        _save_data()
+        logger.info(f"Book successfully deleted with ID: {book_id}")
+
+        # return 204 NO Content for a successful deletion 
+        return 
+    else:
+        # exception handling :if the book  was not in the list
+         logger.warning(f"Deletd failed . book not found with ID: {book_id}")
+
+         raise HTTPException(
+             status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with ID {book_id} not found. Cannot delete."
+         )
+    
