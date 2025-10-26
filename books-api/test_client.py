@@ -51,6 +51,7 @@ def test_read_all():
     response = requests.get(BOOK_ENDPOINT)
     return print_response("GET: Read All Books", response, 200).status_code == 200
 
+# Update book
 def test_update_book_id():
     """Tests the PUT /books/{book_id} endpoint."""
     global NEW_BOOK_ID
@@ -81,8 +82,32 @@ def test_update_book_id():
 
     return response.status_code == 200
 
+# Delete operation
+def test_delete_book():
+   global NEW_BOOK_ID
+   print("\n\n##################### 4.Delete BOOK (DELETE) #####################")
+
+   NEW_BOOK_ID = "add53c5f-150c-43cf-8d7e-508fd979f63b"
 
 
+   if not NEW_BOOK_ID:
+      print("no book id is found, please run test_create_book() first.")
+      return False
+   
+   url = f"{BASE_URL}/books/{NEW_BOOK_ID}"
+
+   response = requests.delete(url, headers=HEADERS)
+   response = print_response("DELETE:DELETE Book", response, 204)
+
+   if response.status_code == 204:
+      print(f"Book with id {NEW_BOOK_ID} deleted successfully")
+      return True
+   else:
+      print(f"failed to delete book id, status:{response.status_code}")
+      return False
+
+# Run all tests in order
 test_read_all()
 # test_create_book()
-test_update_book_id()
+# test_update_book_id()
+test_delete_book()
